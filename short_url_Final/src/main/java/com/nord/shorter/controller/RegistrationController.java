@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class RegistrationController {
@@ -58,5 +59,20 @@ public class RegistrationController {
     @GetMapping("/login")
     public String getLogInPage() {
         return "login";
+    }
+
+    @GetMapping("/user")
+    public String userList(Principal principal) {
+        String url;
+        if (principal == null) {
+            url = "/";
+        } else {
+
+//            User user = userService.findByUsername(request.getUserPrincipal().getName());
+            User user = userService.findByUsername(principal.getName());
+            url = "redirect:/user/" + user.getId();
+        }
+
+        return "user";
     }
 }

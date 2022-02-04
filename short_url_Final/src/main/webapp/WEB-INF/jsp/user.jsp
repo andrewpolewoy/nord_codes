@@ -1,11 +1,10 @@
+<!doctype html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-
-<!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,20 +17,22 @@
 
 <body>
 
-    <div>
-        <a>
-            <sec:authentication property="principal.username" />
-        </a>
-        <a hidden id="principalId">
-            <sec:authentication property="principal.id" />
-        </a>
-        <a hidden id="principalRole">
-            <sec:authentication property="principal.roles" />
-        </a>
-    </div>
+<header>
+        <div class="parent">
+            <a>
+                <sec:authentication property="principal.username" />
+            </a>
+            <a hidden id="principalId">
+                <sec:authentication property="principal.id" />
+            </a>
+            <a hidden id="principalRole">
+                <sec:authentication property="principal.roles" />
+            </a>
+        </div>
+</header>
 
     <div class="container">
-      <table class="table" id="user-table">
+      <table id="user-table" class="table" >
         <thead>
         <tr>
             <th>Date</th>
@@ -41,16 +42,17 @@
         </thead>
         <tbody></tbody>
       </table>
-      <a href="/">Главная</a>
+
     </div>
+    <a href="/">Главная</a>
 
 
 
-
+<div class="block">
         <form class="form">
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" name="originalUrl" required>
+                <input type="text" class="form-control" id="originalUrl" name="originalUrl" required>
                 <label for="floatingInput">Оригинальная ссылка</label>
             </div>
 
@@ -58,7 +60,7 @@
             <button class="w-100 btn btn-sm btn-outline-secondary" onClick="window.location.reload();">Обновить страницу</button>
 
         </form>
-
+</div>
 
 
 
@@ -89,7 +91,7 @@
                                         "<td class='id' hidden align='center'>" + id + "</td>" +
                                         "<td align='center'>" + createdAt + "</td>" +
                                         "<td align='center'>" +
-                                        "<a class='nav-link' href='" + originalUrl + "'>" + hash + "</a>"
+                                        "<a class='nav-link' href='" + originalUrl + "'>" + hash + "</a>" +
                                         "</td>" +
                                         "<td align='center'>" + originalUrl + "</td>" +
                                         "<td>" +
@@ -105,8 +107,8 @@
                     });
                     function handleFormSubmit(event) {
                        event.preventDefault();
-                       var principalId = $('#principalId').text();
-                       var url = 'http://localhost:8080/user/' + principalId,
+
+                       var url = 'http://localhost:8080/user';
 
                        const data = new FormData(event.target);
 

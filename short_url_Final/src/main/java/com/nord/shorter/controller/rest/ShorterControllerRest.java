@@ -1,6 +1,7 @@
 package com.nord.shorter.controller.rest;
 
 import com.nord.shorter.model.Shorter;
+import com.nord.shorter.model.Url;
 import com.nord.shorter.model.User;
 import com.nord.shorter.service.CodeGenerator;
 import com.nord.shorter.service.api.IShortService;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -47,18 +50,43 @@ public class ShorterControllerRest {
         return new ResponseEntity<>(shorter, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Shorter> createShortUrl(Shorter shorter, @PathVariable(name = "id") Long id) {
+//    @PostMapping("/{id}")
+//    public ResponseEntity<Shorter> createShortUrl(@RequestBody Url shorter, @PathVariable(name = "id") Long id) {
+//
+//        String hash = codeGenerator.generate(shorterLength);
+//        log.info("IN ShorterControllerRest createShortUrl {}", hash);
+//        User user = userService.findUserById(id);
+//
+//        if (shorter != null && urlValidator.isValid(shorter.getOriginalUrl())) {
+//            String shorterString = URLDecoder.decode(shorter.getOriginalUrl());
+//            log.info("IN ShorterControllerRest createShortUrl {}", shorterString);
+//            Shorter newShorter = new Shorter();
+//            newShorter.setUser(user);
+//            newShorter.setOriginalUrl(shorter.getOriginalUrl());
+//            newShorter.setHash(hash);
+//            newShorter.setCreatedAt(LocalDate.now());
+//            return new ResponseEntity<>(shortService.save(newShorter), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
+    @PostMapping
+    public ResponseEntity<Shorter> createShort(Url shorter, Principal id) {
 
         String hash = codeGenerator.generate(shorterLength);
         log.info("IN ShorterControllerRest createShortUrl {}", hash);
-        User user = userService.findUserById(id);
+        User user = userService.findByUsername(id.getName());
 
         if (shorter != null && urlValidator.isValid(shorter.getOriginalUrl())) {
             String shorterString = URLDecoder.decode(shorter.getOriginalUrl());
             log.info("IN ShorterControllerRest createShortUrl {}", shorterString);
-            shorter.setUser(user);
-            return new ResponseEntity<>(shortService.save(shorter), HttpStatus.OK);
+            Shorter newShorter = new Shorter();
+            newShorter.setUser(user);
+            newShorter.setOriginalUrl(shorter.getOriginalUrl());
+            newShorter.setHash(hash);
+            newShorter.setCreatedAt(LocalDate.now());
+            return new ResponseEntity<>(shortService.save(newShorter), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
